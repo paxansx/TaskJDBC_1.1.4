@@ -14,9 +14,9 @@ public class Main {
         user1.saveUser("jon22", "smit", (byte) 24);
         user1.saveUser("jon31", "smit", (byte) 26);
         user1.saveUser("jon42", "smit", (byte) 28);
-        System.out.println(user1.getAllUsers());
-        user1.cleanUsersTable();
-        user1.dropUsersTable();
+//        System.out.println(user1.getAllUsers());
+//        user1.cleanUsersTable();
+//        user1.dropUsersTable();
 
     }
 }
