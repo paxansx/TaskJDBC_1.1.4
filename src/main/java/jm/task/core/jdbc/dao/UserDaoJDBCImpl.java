@@ -9,21 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl  implements UserDao {
-    private final String nameTable = "users";
     private final Util util = new Util();
 
     public UserDaoJDBCImpl() {
 
     }
 
-    public String getNameTable() {
-        return nameTable;
-    }
 
     public void createUsersTable() {
         try(Statement statement = util.getConnection().createStatement()) {//коректно ли использовать format?
-        String table =String.format("CREATE TABLE IF NOT EXISTS %s (id BIGINT UNSIGNED  AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(80) NOT NULL, last_name VARCHAR(80) NOT NULL, age INT UNSIGNED);", nameTable) ;
+        String table ="CREATE TABLE IF NOT EXISTS users (id NOT N BIGINT UNSIGNED  AUTO_INCREMENT PRIMARY KEY, " +
+                "name VARCHAR(80) NOT NULL, lastname VARCHAR(80) NOT NULL, age INT UNSIGNED);" ;
             statement.executeUpdate(table);
 
         } catch (SQLException throwables) {
@@ -34,7 +30,7 @@ public class UserDaoJDBCImpl  implements UserDao {
 
     public void dropUsersTable() {
         try(Statement statement = util.getConnection().createStatement()) {
-            String table = String.format("DROP TABLE IF EXISTS %s;",nameTable);
+            String table = "DROP TABLE IF EXISTS users;";
             statement.executeUpdate(table);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -43,7 +39,7 @@ public class UserDaoJDBCImpl  implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sql = String.format("INSERT INTO %s (Name, Last_name, Age) VALUES ( ?, ?, ?)", nameTable) ;
+        String sql = "INSERT INTO users (Name, Lastname, Age) VALUES ( ?, ?, ?)" ;
         try(PreparedStatement preparedStatement = util.getConnection().prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
@@ -59,7 +55,7 @@ public class UserDaoJDBCImpl  implements UserDao {
 
     public void removeUserById(long id) {
         try(Statement statement = util.getConnection().createStatement()) {
-            String table = String.format( "DELETE FROM %S WHERE id = %d;", nameTable, id) ;
+            String table = String.format( "DELETE FROM users WHERE id = %d;", id) ;
             statement.executeUpdate(table);
 
         } catch (SQLException throwables) {
@@ -74,7 +70,7 @@ public class UserDaoJDBCImpl  implements UserDao {
             String table = "SELECT * FROM users;";
             ResultSet resultSet = statement.executeQuery(table);
             while (resultSet.next()){
-                User user = new User(resultSet.getString("name"), resultSet.getString("last_name"),(byte) resultSet.getInt("age"));
+                User user = new User(resultSet.getString("name"), resultSet.getString("lastname"),(byte) resultSet.getInt("age"));
                 user.setId(resultSet.getLong("id"));
                 usersList.add(user );
 
@@ -87,7 +83,7 @@ public class UserDaoJDBCImpl  implements UserDao {
 
     public void cleanUsersTable() {
         try(Statement statement = util.getConnection().createStatement()) {
-            String table = String.format("TRUNCATE TABLE %S;", nameTable) ;
+            String table = "TRUNCATE TABLE users;" ;
             statement.executeUpdate(table);
 
         } catch (SQLException throwables) {
